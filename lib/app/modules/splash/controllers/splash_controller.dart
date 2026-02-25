@@ -24,7 +24,7 @@ class SplashController extends GetxController {
 
   void _goToScreen() {
     if (LocalStorage.isLoggedIn()) {
-      Get.offAllNamed(Routes.bottomNav);
+      Get.offAllNamed(Routes.darazListing);
     } else if (LocalStorage.isOnboardDone()) {
       Get.offAllNamed(Routes.login);
     } else {

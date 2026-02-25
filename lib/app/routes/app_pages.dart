@@ -22,6 +22,8 @@ import '../modules/settings/change_password/bindings/change_password_binding.dar
 import '../modules/settings/change_password/views/change_password_view.dart';
 import '../modules/settings/twofa_security/bindings/twofa_security_binding.dart';
 import '../modules/settings/twofa_security/views/twofa_security_view.dart';
+import '../modules/daraz_listing/bindings/daraz_listing_binding.dart';
+import '../modules/daraz_listing/views/daraz_listing_view.dart';
 
 part 'app_routes.dart';
 
@@ -97,6 +99,12 @@ class AppPages {
       page: () => const TwofaSecurityView(),
       binding: TwofaSecurityBinding(),
       transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: Routes.darazListing,
+      page: () => const DarazListingView(),
+      binding: DarazListingBinding(),
+      transition: Transition.fadeIn,
     ),
   ];
 }

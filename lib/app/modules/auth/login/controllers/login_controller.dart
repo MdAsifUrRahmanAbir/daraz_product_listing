@@ -39,7 +39,7 @@ class LoginController extends GetxController {
       await LocalStorage.saveEmail(email: emailCtrl.text.trim());
       await LocalStorage.setLoggedIn(value: true);
 
-      Get.offAllNamed(Routes.bottomNav);
+      Get.offAllNamed(Routes.darazListing);
     } catch (e) {
       AppSnackBar.error(e.toString());
     } finally {

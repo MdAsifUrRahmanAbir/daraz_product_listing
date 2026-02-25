@@ -15,4 +15,5 @@ abstract class Routes {
   static const settings = '/settings';
   static const changePassword = '/settings/change_password';
   static const twofaSecurity = '/settings/twofa_security';
+  static const darazListing = '/daraz_listing';
 }
