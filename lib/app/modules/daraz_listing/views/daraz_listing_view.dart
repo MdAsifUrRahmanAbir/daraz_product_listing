@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/daraz_listing_controller.dart';
 import 'widgets/sticky_tab_bar_delegate.dart';
-import '../../../data/models/product_model.dart';
+import '../model/fake_product_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class DarazListingView extends GetView<DarazListingController> {
@@ -10,21 +10,20 @@ class DarazListingView extends GetView<DarazListingController> {
 
   @override
   Widget build(BuildContext context) {
-    // We get screen width for drag thresholds
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       body: SafeArea(
         child: Obx(() {
-          if (controller.isLoadingCategories.value) {
+          // Show full-screen loader while products are loading
+          if (controller.isLoadingFakeProducts.value) {
             return const Center(child: CircularProgressIndicator());
           }
-          if (controller.categories.isEmpty) {
-            return const Center(child: Text('No categories found.'));
+          if (controller.fakeProducts.isEmpty) {
+            return const Center(child: Text('No products found.'));
           }
 
           return GestureDetector(
-            // Catch horizontal drags for the entire scrollable area
             onHorizontalDragUpdate: controller.handleHorizontalDragUpdate,
             onHorizontalDragEnd: (details) =>
                 controller.handleHorizontalDragEnd(details, screenWidth),
@@ -33,66 +32,49 @@ class DarazListingView extends GetView<DarazListingController> {
               child: CustomScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 slivers: [
-                  // 1. Collapsible Header (Daraz Banner / Search)
+                  // ── 1. Collapsible SliverAppBar ──────────────────────────
                   SliverAppBar(
-                    expandedHeight: 200.0,
+                    expandedHeight: 180.0,
                     pinned: true,
                     floating: false,
                     flexibleSpace: FlexibleSpaceBar(
-                      title: const Text('Daraz Style'),
-                      background: Image.network(
-                        'https://fakestoreapi.com/icons/logo.png', // Or some banner
-                        fit: BoxFit.contain,
-                        color: Colors.white.withValues(alpha: 0.1),
-                        colorBlendMode: BlendMode.darken,
+                      title: const Text(
+                        'Daraz Listing',
+                        style: TextStyle(fontSize: 16),
                       ),
-                    ),
-                    actions: [
-                      IconButton(
-                        icon: const Icon(Icons.person),
-                        onPressed: () {
-                          if (controller.user.value != null) {
-                            Get.snackbar(
-                              'Profile',
-                              'Logged in as ${controller.user.value!.username}',
-                            );
-                          } else {
-                            Get.snackbar('Profile', 'Not logged in yet');
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-
-                  // 2. Sticky Tab Bar
-                  SliverPersistentHeader(
-                    pinned: true,
-                    delegate: StickyTabBarDelegate(
-                      TabBar(
-                        isScrollable: true,
-                        controller: TabController(
-                          length: controller.categories.length,
-                          vsync: controller,
-                          initialIndex: controller.currentTabIndex.value,
+                      background: ColoredBox(
+                        color: Colors.deepOrange.shade50,
+                        child: const Center(
+                          child: Icon(
+                            Icons.store,
+                            size: 80,
+                            color: Colors.deepOrange,
+                          ),
                         ),
-                        onTap: controller.onTabTapped,
-                        tabs: controller.categories
-                            .map((cat) => Tab(text: cat.toUpperCase()))
-                            .toList(),
-                        labelColor: Theme.of(context).primaryColor,
-                        unselectedLabelColor: Colors.grey,
-                        indicatorColor: Theme.of(context).primaryColor,
                       ),
                     ),
                   ),
 
-                  // 3. Grid of Products for the Active Category
-                  if (controller.isLoadingProducts.value)
-                    const SliverFillRemaining(
-                      child: Center(child: CircularProgressIndicator()),
-                    )
-                  else
-                    _buildAnimatedProductGrid(context, screenWidth),
+                  // ── 2. Sticky Category Tab Bar ───────────────────────────
+                  if (controller.tabController != null)
+                    SliverPersistentHeader(
+                      pinned: true,
+                      delegate: StickyTabBarDelegate(
+                        TabBar(
+                          isScrollable: true,
+                          controller: controller.tabController,
+                          tabs: controller.categories
+                              .map((cat) => Tab(text: cat.toUpperCase()))
+                              .toList(),
+                          labelColor: Colors.deepOrange,
+                          unselectedLabelColor: Colors.grey,
+                          indicatorColor: Colors.deepOrange,
+                        ),
+                      ),
+                    ),
+
+                  // ── 3. Product Grid filtered by active tab ───────────────
+                  _buildProductGrid(screenWidth),
                 ],
               ),
             ),
@@ -102,20 +84,19 @@ class DarazListingView extends GetView<DarazListingController> {
     );
   }
 
-  Widget _buildAnimatedProductGrid(BuildContext context, double screenWidth) {
-    if (controller.categories.isEmpty) {
-      return const SliverToBoxAdapter(child: SizedBox());
-    }
-
+  Widget _buildProductGrid(double screenWidth) {
     final currentCategory =
         controller.categories[controller.currentTabIndex.value];
-    final products = controller.products[currentCategory] ?? [];
 
-    if (products.isEmpty) {
+    final tabProducts = controller.fakeProducts
+        .where((p) => p.category == currentCategory)
+        .toList();
+
+    if (tabProducts.isEmpty) {
       return const SliverToBoxAdapter(
         child: Padding(
           padding: EdgeInsets.all(32.0),
-          child: Center(child: Text("No products.")),
+          child: Center(child: Text('No products in this category.')),
         ),
       );
     }
@@ -129,28 +110,27 @@ class DarazListingView extends GetView<DarazListingController> {
           mainAxisSpacing: 8.0,
           crossAxisSpacing: 8.0,
         ),
-        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-          final product = products[index];
+        delegate: SliverChildBuilderDelegate((context, index) {
+          final product = tabProducts[index];
           return AnimatedBuilder(
             animation: controller.dragAnimationController,
             builder: (context, child) {
-              // Determine horizontal offset for this item
-              double dx = controller.dragOffset.value;
               return Transform.translate(
-                offset: Offset(dx, 0),
-                child: _ProductCard(product: product),
+                offset: Offset(controller.dragOffset.value, 0),
+                child: _FakeProductCard(product: product),
               );
             },
           );
-        }, childCount: products.length),
+        }, childCount: tabProducts.length),
       ),
     );
   }
 }
 
-class _ProductCard extends StatelessWidget {
-  final Product product;
-  const _ProductCard({required this.product});
+// ── Product Card ─────────────────────────────────────────────────────────────
+class _FakeProductCard extends StatelessWidget {
+  final FakeProduct product;
+  const _FakeProductCard({required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -160,6 +140,7 @@ class _ProductCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Product image
           Expanded(
             child: ClipRRect(
               borderRadius: const BorderRadius.vertical(
@@ -169,12 +150,15 @@ class _ProductCard extends StatelessWidget {
                 imageUrl: product.image,
                 fit: BoxFit.contain,
                 width: double.infinity,
-                placeholder: (context, url) =>
-                    const Center(child: CircularProgressIndicator()),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
+                placeholder: (context, url) => const Center(
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+                errorWidget: (context, url, error) =>
+                    const Icon(Icons.broken_image),
               ),
             ),
           ),
+          // Product info
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -191,7 +175,7 @@ class _ProductCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '\$${product.price}',
+                  '\$${product.price.toStringAsFixed(2)}',
                   style: const TextStyle(
                     color: Colors.deepOrange,
                     fontWeight: FontWeight.bold,

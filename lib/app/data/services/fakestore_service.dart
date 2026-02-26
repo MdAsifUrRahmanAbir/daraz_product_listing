@@ -3,9 +3,28 @@ import 'package:http/http.dart' as http;
 import '../models/product_model.dart';
 import '../models/user_model.dart';
 import '../../core/utils/app_logger.dart';
+import '../../modules/daraz_listing/model/fake_product_model.dart';
 
 class FakestoreService {
   static const String baseUrl = 'https://fakestoreapi.com';
+
+  /// GET URL for fetching all fake products
+  static const String fakeProductsGetUrl = '$baseUrl/products';
+
+  /// GET all products as [FakeProduct] list
+  static Future<List<FakeProduct>> getFakeProducts({int limit = 20}) async {
+    final log = appLogger(FakestoreService);
+    try {
+      final res = await http.get(Uri.parse('$fakeProductsGetUrl?limit=$limit'));
+      if (res.statusCode == 200) {
+        return fakeProductFromJson(res.body);
+      }
+    } catch (e) {
+      log.e('getFakeProducts error: $e');
+    }
+    return [];
+  }
+
   static final _log = appLogger(FakestoreService);
 
   static Future<List<Product>> getProducts({int limit = 20}) async {

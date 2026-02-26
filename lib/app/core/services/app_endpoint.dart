@@ -9,7 +9,7 @@ class AppEndpoint {
 
   // ── Domain ──────────────────────────────────────────────────────────────────
   static const String mainDomain =
-      'https://api.yourapp.com'; // <── change per project
+      'https://fakestoreapi.com'; // <── change per project
   static const String apiVersion = '/v1';
   static const String baseUrl = '$mainDomain$apiVersion';
 
@@ -49,4 +49,7 @@ class AppEndpoint {
   static final String twoFaVerifyURL = _url('/authorize/google/2fa/verify');
 
   // ── Add custom endpoints below as the project grows ─────────────────────────
+
+  static final String fakeProductsGetUrl = _url('/products');
+
 }

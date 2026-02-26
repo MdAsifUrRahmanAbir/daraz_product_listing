@@ -1,22 +1,27 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../data/models/product_model.dart';
-import '../../../data/models/user_model.dart';
 import '../../../data/services/fakestore_service.dart';
+import '../model/fake_product_model.dart';
 
 class DarazListingController extends GetxController
-    with GetSingleTickerProviderStateMixin {
-  var isLoadingCategories = true.obs;
-  var isLoadingProducts = true.obs;
+    with GetTickerProviderStateMixin {
+  // ── Loading states ──────────────────────────────────────────────────────────
+  var isLoadingFakeProducts = true.obs;
   var isRefreshing = false.obs;
 
+  // ── Data ────────────────────────────────────────────────────────────────────
+  /// All products fetched from [FakestoreService.fakeProductsGetUrl]
+  var fakeProducts = <FakeProduct>[].obs;
+
+  /// Unique categories derived from [fakeProducts]
   var categories = <String>[].obs;
-  var products = <String, List<Product>>{}.obs; // category -> products
 
   var currentTabIndex = 0.obs;
-  var user = Rxn<UserModel>();
 
-  // For horizontal swipe animation
+  // ── Tab controller (created once, lives in the controller) ──────────────────
+  TabController? tabController;
+
+  // ── Horizontal swipe animation ───────────────────────────────────────────────
   late AnimationController dragAnimationController;
   var dragOffset = 0.0.obs;
 
@@ -27,55 +32,49 @@ class DarazListingController extends GetxController
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    _initData();
+    fetchFakeProducts();
   }
 
-  Future<void> _initData() async {
-    await fetchCategories();
-    if (categories.isNotEmpty) {
-      await fetchProductsForCategory(categories[currentTabIndex.value]);
-    }
-    await _loginAndProfile();
+  // ── GET: Fetch all fake products ────────────────────────────────────────────
+  Future<void> fetchFakeProducts({int limit = 20}) async {
+    isLoadingFakeProducts.value = true;
+    final result = await FakestoreService.getFakeProducts(limit: limit);
+    fakeProducts.value = result;
+    // Build unique category list preserving insertion order
+    final seen = <String>{};
+    categories.value = result.map((p) => p.category).where(seen.add).toList();
+    currentTabIndex.value = 0;
+    // Recreate TabController with the correct tab count
+    tabController?.dispose();
+    tabController = TabController(
+      length: categories.length,
+      vsync: this,
+      initialIndex: 0,
+    );
+    tabController!.addListener(() {
+      if (!tabController!.indexIsChanging) {
+        currentTabIndex.value = tabController!.index;
+      }
+    });
+    isLoadingFakeProducts.value = false;
   }
 
-  Future<void> fetchCategories() async {
-    isLoadingCategories.value = true;
-    final cats = await FakestoreService.getCategories();
-    // Use first 3 categories for tabs
-    categories.value = cats.take(3).toList();
-    isLoadingCategories.value = false;
-  }
-
-  Future<void> fetchProductsForCategory(String category) async {
-    if (products.containsKey(category) &&
-        products[category]!.isNotEmpty &&
-        !isRefreshing.value) {
-      return;
-    }
-    isLoadingProducts.value = true;
-    final items = await FakestoreService.getProductsByCategory(category);
-    products[category] = items;
-    isLoadingProducts.value = false;
-  }
-
+  // ── Pull-to-refresh ─────────────────────────────────────────────────────────
   Future<void> onRefresh() async {
     isRefreshing.value = true;
-    if (categories.isNotEmpty) {
-      await fetchProductsForCategory(categories[currentTabIndex.value]);
-    }
+    await fetchFakeProducts();
     isRefreshing.value = false;
   }
 
+  // ── Tab tapped ───────────────────────────────────────────────────────────────
   void onTabTapped(int index) {
     if (index == currentTabIndex.value) return;
     currentTabIndex.value = index;
-    fetchProductsForCategory(categories[index]);
   }
 
+  // ── Horizontal drag ──────────────────────────────────────────────────────────
   void handleHorizontalDragUpdate(DragUpdateDetails details) {
-    // Only allow drag if we have multiple tabs
     if (categories.isEmpty) return;
-
     dragOffset.value += details.delta.dx;
   }
 
@@ -85,7 +84,6 @@ class DarazListingController extends GetxController
     final velocity = details.primaryVelocity ?? 0;
     final offset = dragOffset.value;
 
-    // Determine if we should switch tab
     bool shouldSwitchLeft = (offset > screenWidth / 3) || (velocity > 300);
     bool shouldSwitchRight = (offset < -screenWidth / 3) || (velocity < -300);
 
@@ -98,29 +96,23 @@ class DarazListingController extends GetxController
       targetIndex++;
     }
 
-    // Animate to final position
     double targetOffset = 0;
     if (targetIndex < currentTabIndex.value) {
       targetOffset = screenWidth;
     } else if (targetIndex > currentTabIndex.value) {
       targetOffset = -screenWidth;
-    } else {
-      targetOffset = 0;
     }
 
     final simulation = Tween<double>(begin: offset, end: targetOffset).animate(
       CurvedAnimation(parent: dragAnimationController, curve: Curves.easeOut),
     );
 
-    simulation.addListener(() {
-      dragOffset.value = simulation.value;
-    });
+    simulation.addListener(() => dragOffset.value = simulation.value);
 
     simulation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         if (targetIndex != currentTabIndex.value) {
           currentTabIndex.value = targetIndex;
-          fetchProductsForCategory(categories[targetIndex]);
         }
         dragOffset.value = 0.0;
         dragAnimationController.reset();
@@ -130,18 +122,9 @@ class DarazListingController extends GetxController
     dragAnimationController.forward(from: 0.0);
   }
 
-  Future<void> _loginAndProfile() async {
-    // Fakestore credentials
-    final token = await FakestoreService.login('mor_2314', '83r5^_');
-    if (token != null) {
-      // Fake profile fetch
-      final userModel = await FakestoreService.getProfile(2);
-      user.value = userModel;
-    }
-  }
-
   @override
   void onClose() {
+    tabController?.dispose();
     dragAnimationController.dispose();
     super.onClose();
   }
