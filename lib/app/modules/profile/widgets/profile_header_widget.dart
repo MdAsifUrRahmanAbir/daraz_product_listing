@@ -4,14 +4,18 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_sizes.dart';
 import '../../../widgets/text_widget.dart';
 import '../controllers/profile_controller.dart';
+import '../model/user_model.dart';
 
 class ProfileHeaderWidget extends GetView<ProfileController> {
   final VoidCallback onLogout;
-  const ProfileHeaderWidget({super.key, required this.onLogout});
+  final UserModel? user;
+
+  const ProfileHeaderWidget({super.key, required this.onLogout, this.user});
 
   @override
   Widget build(BuildContext context) {
-    final user = controller.user.value!;
+    final displayUser = user ?? controller.user.value ?? UserModel.dummy();
+
     return SliverAppBar(
       expandedHeight: 220,
       pinned: true,
@@ -21,8 +25,29 @@ class ProfileHeaderWidget extends GetView<ProfileController> {
         onPressed: () => Get.back(),
         icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
       ),
+      actions: [
+        Obx(() {
+          if (controller.isLoggingOut.value) {
+            return const Padding(
+              padding: EdgeInsets.only(right: 16),
+              child: SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.white,
+                ),
+              ),
+            );
+          }
+          return IconButton(
+            onPressed: onLogout,
+            icon: const Icon(Icons.logout_rounded, color: Colors.white),
+            tooltip: 'Logout',
+          );
+        }),
+      ],
       flexibleSpace: FlexibleSpaceBar(
-
         background: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -48,13 +73,12 @@ class ProfileHeaderWidget extends GetView<ProfileController> {
                 ),
                 const SizedBox(height: AppSizes.gapSmall),
                 TextWidget.headlineMedium(
-                  user.fullName,
+                  displayUser.fullName,
                   color: Colors.white,
                   fontWeight: FontWeight.w800,
                 ),
-
                 TextWidget.bodySmall(
-                  user.email ?? '',
+                  displayUser.email ?? '',
                   color: Colors.white.withValues(alpha: 0.8),
                 ),
               ],

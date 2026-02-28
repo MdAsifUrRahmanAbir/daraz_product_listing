@@ -68,7 +68,7 @@ class ToggleSwitchWidget extends StatelessWidget {
         Switch(
           value: value,
           onChanged: onChanged,
-          activeColor: activeColor ?? AppColors.primary,
+          activeThumbColor: activeColor ?? AppColors.primary,
         ),
       ],
     );

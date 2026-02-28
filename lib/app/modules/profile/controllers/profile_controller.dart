@@ -8,6 +8,7 @@ import '../model/user_model.dart';
 class ProfileController extends GetxController {
   final user = Rxn<UserModel>();
   final isLoading = false.obs;
+  final isLoggingOut = false.obs;
 
   @override
   void onInit() {
@@ -32,7 +33,13 @@ class ProfileController extends GetxController {
   }
 
   Future<void> logout() async {
-    await LocalStorage.signOut();
-    Get.offAllNamed(Routes.login);
+    isLoggingOut.value = true;
+    try {
+      await Future.delayed(const Duration(seconds: 1)); // Mock delay
+      await LocalStorage.signOut();
+      Get.offAllNamed(Routes.login);
+    } finally {
+      isLoggingOut.value = false;
+    }
   }
 }

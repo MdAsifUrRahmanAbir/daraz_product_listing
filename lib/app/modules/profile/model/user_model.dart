@@ -45,6 +45,21 @@ class UserModel {
 
   String get fullName =>
       '${name?.firstname ?? ''} ${name?.lastname ?? ''}'.trim();
+
+  factory UserModel.dummy() => const UserModel(
+    id: 0,
+    email: 'loading@example.com',
+    username: 'loading',
+    name: UserName(firstname: 'First', lastname: 'Last'),
+    phone: '000-000-0000',
+    address: UserAddress(
+      city: 'City',
+      street: 'Street',
+      number: 0,
+      zipcode: '00000',
+      geolocation: UserGeolocation(lat: '0', long: '0'),
+    ),
+  );
 }
 
 class UserName {

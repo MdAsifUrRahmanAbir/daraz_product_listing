@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final fakeProduct = fakeProductFromJson(jsonString);
-
 import 'dart:convert';
 
 List<FakeProduct> fakeProductFromJson(String str) => List<FakeProduct>.from(
@@ -35,6 +31,16 @@ class FakeProduct {
     category: json["category"],
     image: json["image"],
     rating: Rating.fromJson(json["rating"]),
+  );
+
+  factory FakeProduct.dummy({int id = 0}) => FakeProduct(
+    id: id,
+    title: 'Loading Product Name...',
+    price: 99.99,
+    description: 'Loading description details...',
+    category: 'Category $id',
+    image: '',
+    rating: Rating(rate: 0.0, count: 0),
   );
 }
 

@@ -16,7 +16,7 @@ class PopularCategoriesWidget extends GetView<DarazListingController> {
   @override
   Widget build(BuildContext context) {
     final cats = <String, dynamic>{};
-    for (final p in controller.fakeProducts) {
+    for (final p in controller.displayProducts) {
       cats.putIfAbsent(p.category, () => p);
     }
     final entries = cats.entries.toList();

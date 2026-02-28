@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_sizes.dart';
-import '../../../core/constants/app_strings.dart';
 import '../controllers/daraz_listing_controller.dart';
 import '../widgets/bottom_tab_widget.dart';
 import '../widgets/daily_deals_widget.dart';
@@ -17,6 +15,7 @@ import '../widgets/search_bar_widget.dart';
 import '../widgets/service_row_widget.dart';
 import '../widgets/voucher_strip_widget.dart';
 import '../../../widgets/text_widget.dart';
+import '../../../core/utils/shimmer_extension.dart';
 
 class DarazListingView extends GetView<DarazListingController> {
   const DarazListingView({super.key});
@@ -29,12 +28,12 @@ class DarazListingView extends GetView<DarazListingController> {
   Widget _body(BuildContext context) {
     return SafeArea(
       child: Obx(() {
-        if (controller.isLoadingFakeProducts.value) {
-          return _buildLoader();
-        }
-        if (controller.fakeProducts.isEmpty) {
+        final isLoading = controller.isLoadingFakeProducts.value;
+
+        if (controller.fakeProducts.isEmpty && !isLoading) {
           return Center(child: TextWidget.body('No products found.'));
         }
+
         return RefreshIndicator(
           onRefresh: controller.onRefresh,
           color: AppColors.primary,
@@ -61,21 +60,8 @@ class DarazListingView extends GetView<DarazListingController> {
             // Main Product Feed
             body: const ProductFeedWidget(),
           ),
-        );
+        ).skeletonizer(enabled: isLoading);
       }),
-    );
-  }
-
-  Widget _buildLoader() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const CircularProgressIndicator(color: AppColors.primary),
-          const SizedBox(height: AppSizes.gapMid),
-          TextWidget.body(AppStrings.loading, color: AppColors.textSecondary),
-        ],
-      ),
     );
   }
 }

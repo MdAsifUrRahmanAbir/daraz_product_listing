@@ -58,13 +58,15 @@ class ApiMethod {
       return _handleResponse(res, code, showErrorMessage);
     } on SocketException {
       _log.e('SocketException on GET $url');
-      if (showErrorMessage)
+      if (showErrorMessage) {
         AppSnackBar.error('Check your internet connection and try again.');
+      }
       return null;
     } on TimeoutException {
       _log.e('TimeoutException on GET $url');
-      if (showErrorMessage)
+      if (showErrorMessage) {
         AppSnackBar.error('Request timed out. Please try again.');
+      }
       return null;
     } catch (e) {
       _log.e('Unknown error on GET $url: $e');
@@ -95,13 +97,15 @@ class ApiMethod {
       return _handleResponse(res, code, showErrorMessage);
     } on SocketException {
       _log.e('SocketException on POST $url');
-      if (showErrorMessage)
+      if (showErrorMessage) {
         AppSnackBar.error('Check your internet connection and try again.');
+      }
       return null;
     } on TimeoutException {
       _log.e('TimeoutException on POST $url');
-      if (showErrorMessage)
+      if (showErrorMessage) {
         AppSnackBar.error('Request timed out. Please try again.');
+      }
       return null;
     } catch (e) {
       _log.e('Unknown error on POST $url: $e');
@@ -130,8 +134,9 @@ class ApiMethod {
       return _handleResponse(res, code, showErrorMessage);
     } on SocketException {
       _log.e('SocketException on MULTIPART $url');
-      if (showErrorMessage)
+      if (showErrorMessage) {
         AppSnackBar.error('Check your internet connection and try again.');
+      }
       return null;
     } catch (e) {
       _log.e('Unknown error on MULTIPART $url: $e');
@@ -164,8 +169,9 @@ class ApiMethod {
       return _handleResponse(res, code, showErrorMessage);
     } on SocketException {
       _log.e('SocketException on MULTIPART-MULTI $url');
-      if (showErrorMessage)
+      if (showErrorMessage) {
         AppSnackBar.error('Check your internet connection and try again.');
+      }
       return null;
     } catch (e) {
       _log.e('Unknown error on MULTIPART-MULTI $url: $e');
@@ -190,8 +196,9 @@ class ApiMethod {
     }
     // Server error
     if (res.statusCode == 500) {
-      if (showErrorMessage)
+      if (showErrorMessage) {
         AppSnackBar.error('Internal server error. Please try again later.');
+      }
       return null;
     }
     if (res.statusCode == expectedCode) {

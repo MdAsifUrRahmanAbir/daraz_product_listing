@@ -36,6 +36,8 @@ dependencies:
   flutter_svg: ^2.1.1             # For SVG icons
   url_launcher: ^6.1.11           # For opening external URLs
   fluttertoast: 9.0.0             # Optional: for toast messages
+  shimmer: ^3.0.0
+  skeletonizer:
 
 dev_dependencies:
   flutter_test:

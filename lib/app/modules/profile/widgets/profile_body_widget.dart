@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_sizes.dart';
 import '../../../core/constants/app_strings.dart';
@@ -88,12 +89,15 @@ class ProfileBodyWidget extends StatelessWidget {
           ),
           const SizedBox(height: AppSizes.gapLarge),
 
-          // Logout Button
-          PrimaryButton(
-            text: AppStrings.logout,
-            color: AppColors.error,
-            icon: Icons.logout_rounded,
-            onPressed: onLogout,
+          // Logout Button with Circular Loading
+          Obx(
+            () => PrimaryButton(
+              text: AppStrings.logout,
+              color: AppColors.error,
+              icon: Icons.logout_rounded,
+              isLoading: controller.isLoggingOut.value,
+              onPressed: onLogout,
+            ),
           ),
           const SizedBox(height: AppSizes.gapXLarge),
         ]),

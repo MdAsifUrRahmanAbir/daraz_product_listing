@@ -4,6 +4,7 @@
 /// Usage:
 ///   import 'package:my_structure/app/core/utils/app_screen_imports.dart';
 ///
+library;
 export 'package:flutter/material.dart';
 export 'package:get/get.dart';
 

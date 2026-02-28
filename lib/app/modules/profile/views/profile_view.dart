@@ -7,6 +7,8 @@ import '../../../widgets/text_widget.dart';
 import '../controllers/profile_controller.dart';
 import '../widgets/profile_header_widget.dart';
 import '../widgets/profile_body_widget.dart';
+import '../model/user_model.dart';
+import '../../../core/utils/shimmer_extension.dart';
 
 class ProfileView extends GetView<ProfileController> {
   const ProfileView({super.key});
@@ -19,12 +21,10 @@ class ProfileView extends GetView<ProfileController> {
           ? AppColors.darkScaffoldBackground
           : AppColors.scaffoldBackground,
       body: Obx(() {
-        if (controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
+        final isLoading = controller.isLoading.value;
         final user = controller.user.value;
-        if (user == null) {
+
+        if (user == null && !isLoading) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -40,20 +40,25 @@ class ProfileView extends GetView<ProfileController> {
           );
         }
 
+        final displayUser = user ?? UserModel.dummy();
+
         return CustomScrollView(
           slivers: [
             // Profile Header
-            ProfileHeaderWidget(onLogout: () => _showLogoutDialog(context)),
+            ProfileHeaderWidget(
+              user: displayUser,
+              onLogout: () => _showLogoutDialog(context),
+            ),
 
             // Use the abstracted body widget for info list and cards
             ProfileBodyWidget(
               controller: controller,
-              user: user,
+              user: displayUser,
               isDark: isDark,
               onLogout: () => _showLogoutDialog(context),
             ),
           ],
-        );
+        ).skeletonizer(enabled: isLoading);
       }),
     );
   }

@@ -27,6 +27,7 @@ class BottomTabWidget extends GetView<DarazListingController> {
       pinned: true,
       floating: false,
       snap: false,
+      scrolledUnderElevation: 0,
       expandedHeight: 0,
       toolbarHeight: 46,
       elevation: 2,
@@ -43,7 +44,6 @@ class BottomTabWidget extends GetView<DarazListingController> {
               children: List.generate(_tabs.length, (i) {
                 final selected = controller.currentBottomTab.value == i;
                 return InkWell(
-                  key: controller.tabKeys[i],
                   onTap: () => controller.onBottomTabTapped(i),
                   child: Container(
                     height: 46,

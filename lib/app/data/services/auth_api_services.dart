@@ -3,17 +3,6 @@ import '../../core/services/app_endpoint.dart';
 import '../../core/services/app_snackbar.dart';
 import '../../core/utils/app_logger.dart';
 
-/// Auth-level API services — follows Remitium's AuthApiServices pattern.
-///
-/// Each method:
-///   1. Calls ApiMethod.get() or ApiMethod.post() on the correct endpoint
-///   2. Parses the raw map into a typed model (T.fromJson)
-///   3. Shows a snackbar on success/error
-///   4. Returns the typed model or null
-///
-/// Usage in a controller:
-///   final result = await AuthApiServices.signIn(body: {...});
-///   if (result != null) { ... }
 class AuthApiServices {
   AuthApiServices._();
   static final _log = appLogger(AuthApiServices);
