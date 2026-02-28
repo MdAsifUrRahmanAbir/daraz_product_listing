@@ -3,82 +3,76 @@ class AppStrings {
   AppStrings._();
 
   // App
-  static const String appName = 'My App';
-  static const String appTagline = 'Your journey starts here';
+  static const String appName = 'Daraz';
+  static const String appTagline = 'Happy Shopping';
 
   // Splash
   static const String loading = 'Loading...';
 
-  // Onboard
-  static const String skip = 'Skip';
-  static const String next = 'Next';
-  static const String getStarted = 'Get Started';
-  static const String onboard1Title = 'Welcome to MyApp';
-  static const String onboard1Subtitle =
-      'Discover amazing features tailored just for you.';
-  static const String onboard2Title = 'Stay Organized';
-  static const String onboard2Subtitle =
-      'Manage everything in one place with ease.';
-  static const String onboard3Title = 'Achieve More';
-  static const String onboard3Subtitle =
-      'Reach your goals faster with powerful tools.';
-
   // Auth
   static const String login = 'Login';
-  static const String register = 'Register';
   static const String signUp = 'Sign Up';
   static const String signIn = 'Sign In';
   static const String logout = 'Logout';
-  static const String email = 'Email';
+  static const String username = 'Username';
+  static const String usernameHint = 'johnd';
   static const String password = 'Password';
-  static const String confirmPassword = 'Confirm Password';
-  static const String fullName = 'Full Name';
-  static const String phoneNumber = 'Phone Number';
+  static const String passwordHint = 'Enter your password';
   static const String forgotPassword = 'Forgot Password?';
   static const String dontHaveAccount = "Don't have an account? ";
-  static const String alreadyHaveAccount = 'Already have an account? ';
-  static const String emailHint = 'Enter your email';
-  static const String passwordHint = 'Enter your password';
-  static const String confirmPasswordHint = 'Re-enter your password';
-  static const String fullNameHint = 'Enter your full name';
-  static const String phoneHint = 'Enter your phone number';
-
-  // Validation
-  static const String required = 'This field is required';
-  static const String invalidEmail = 'Enter a valid email address';
-  static const String weakPassword = 'Password must be at least 6 characters';
-  static const String passwordMismatch = 'Passwords do not match';
+  static const String welcomeBack = 'Welcome Back 👋';
+  static const String signInToContinue = 'Sign in to continue';
 
   // Profile
   static const String profile = 'Profile';
   static const String editProfile = 'Edit Profile';
-  static const String saveChanges = 'Save Changes';
-  static const String bio = 'Bio';
-  static const String bioHint = 'Tell us about yourself';
-  static const String location = 'Location';
-  static const String locationHint = 'Enter your city';
-
-  // Settings
-  static const String settings = 'Settings';
-  static const String appearance = 'Appearance';
-  static const String darkMode = 'Dark Mode';
-  static const String language = 'Language';
-  static const String notifications = 'Notifications';
-  static const String privacy = 'Privacy';
-  static const String changePassword = 'Change Password';
-  static const String twoFaSecurity = '2FA Security';
-  static const String aboutApp = 'About App';
-  static const String version = 'Version';
-  static const String helpSupport = 'Help & Support';
+  static const String failedToLoadProfile = 'Failed to load profile.';
+  static const String retry = 'Retry';
   static const String logoutConfirm = 'Are you sure you want to logout?';
   static const String cancel = 'Cancel';
-  static const String confirm = 'Confirm';
   static const String yes = 'Yes';
   static const String no = 'No';
 
+  static const String accountInfo = 'Account Information';
+  static const String addressDetails = 'Address Details';
+  static const String geolocation = 'Geolocation';
+  static const String phone = 'Phone';
+  static const String street = 'Street';
+  static const String city = 'City';
+  static const String zipCode = 'Zip Code';
+  static const String latitude = 'Latitude';
+  static const String longitude = 'Longitude';
+
+  // Daraz Listing
+  static const String popularCategories = 'Popular Categories For You';
+  static const String dailySheraDeals = 'Daily Shera Deals';
+  static const String flashSale = 'Flash Sale';
+  static const String eidSale = 'EID SALE';
+  static const String scrollMore = 'Scroll More ';
+  static const String shopMore = 'Shop More ';
+  static const String shopNow = 'Shop Now';
+  static const String searchHint = 'smart watch';
+  static const String search = 'Search';
+  static const String buyAny3 = 'Buy Any 3';
+  static const String freeDelivery = 'Free Delivery';
+  static const String darazFreebie = 'Daraz Freebie';
+  static const String fashion = 'Fashion';
+  static const String beauty = 'Beauty';
+  static const String electronics = 'Electronics';
+  static const String hotDeals = 'Hot Deals';
+  static const String choice = 'CHOICE';
+  static const String voucherMax = 'Voucher Max';
+  static const String freeShipping = 'Free Shipping';
+  static const String discount = 'Discount';
+  static const String collect = 'Collect';
+  static const String only1Left = 'Only 1 left';
+  static const String safePayment = 'Safe Payment';
+  static const String fastDelivery = 'Fast Delivery';
+  static const String freeReturn = 'Free Return';
+  static const String bannerEidSaleTitle = '3.3 Eid Sale';
+  static const String bannerEidSaleSub = 'Real Eid, Real Deals!';
+  static const String upTo80Off = 'Up to 80% OFF';
+
   // Navigation
   static const String home = 'Home';
-  static const String explore = 'Explore';
-  static const String notifications_ = 'Notifications';
-  static const String more = 'More';
 }

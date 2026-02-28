@@ -10,8 +10,7 @@ class AppEndpoint {
   // ── Domain ──────────────────────────────────────────────────────────────────
   static const String mainDomain =
       'https://fakestoreapi.com'; // <── change per project
-  static const String apiVersion = '/v1';
-  static const String baseUrl = '$mainDomain$apiVersion';
+  static const String baseUrl = mainDomain;
 
   // ── Helper ──────────────────────────────────────────────────────────────────
   static String _url(String path) => '$baseUrl$path';
@@ -20,7 +19,7 @@ class AppEndpoint {
   static final String settingsURL = _url('/settings/basic-settings');
 
   // ── Auth ─────────────────────────────────────────────────────────────────────
-  static final String loginURL = _url('/login');
+  static final String loginURL = _url('/auth/login');
   static final String registerURL = _url('/register');
   static final String logoutURL = _url('/user/logout');
   static final String forgotPasswordURL = _url('/password/forgot/find/user');
@@ -34,7 +33,7 @@ class AppEndpoint {
   static final String verifyCodeURL = _url('/authorize/mail/verify/code');
 
   // ── Profile ──────────────────────────────────────────────────────────────────
-  static final String profileGetURL = _url('/user/profile/info');
+  static final String profileGetURL = _url('/users/1');
   static final String profileUpdateURL = _url('/user/profile/info/update');
   static final String passwordUpdateURL = _url('/user/profile/password/update');
   static final String deleteAccountURL = _url('/user/profile/delete-profile');
@@ -51,5 +50,4 @@ class AppEndpoint {
   // ── Add custom endpoints below as the project grows ─────────────────────────
 
   static final String fakeProductsGetUrl = _url('/products');
-
 }

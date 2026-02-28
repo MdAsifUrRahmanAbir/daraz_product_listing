@@ -179,11 +179,14 @@ class ApiMethod {
     int expectedCode,
     bool showErrorMessage,
   ) {
-    // Unauthenticated — clear auth and go to login
+    // Unauthenticated — clear auth and go to login if token exists (expired)
     if (res.statusCode == 401) {
-      LocalStorage.signOut();
-      Get.offAllNamed(Routes.login);
-      return null;
+      if (LocalStorage.hasToken()) {
+        LocalStorage.signOut();
+        Get.offAllNamed(Routes.login);
+        return null;
+      }
+      // If no token, it's likely a login attempt failed — continue to error handling below
     }
     // Server error
     if (res.statusCode == 500) {
@@ -199,9 +202,11 @@ class ApiMethod {
     if (showErrorMessage) {
       try {
         final decoded = jsonDecode(res.body) as Map<String, dynamic>;
+        final msgList = decoded['message']?['error'] as List?;
         final msg =
-            decoded['message']?['error']?.join(' ') ??
+            msgList?.join(' ') ??
             decoded['message']?.toString() ??
+            decoded['msg']?.toString() ?? // Some APIs use 'msg'
             'Something went wrong.';
         AppSnackBar.error(msg);
       } catch (_) {

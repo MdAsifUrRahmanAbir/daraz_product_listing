@@ -1,28 +1,35 @@
 import 'package:get/get.dart';
+import '../../../core/services/api_service.dart';
+import '../../../core/services/app_endpoint.dart';
 import '../../../core/services/local_storage_service.dart';
 import '../../../routes/app_pages.dart';
+import '../model/user_model.dart';
 
 class ProfileController extends GetxController {
-  final userName = ''.obs;
-  final userEmail = ''.obs;
-  final userAvatar = ''.obs;
+  final user = Rxn<UserModel>();
+  final isLoading = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    _loadProfile();
+    fetchUserProfile();
   }
 
-  void _loadProfile() {
-    userName.value = LocalStorage.getName().isNotEmpty
-        ? LocalStorage.getName()
-        : 'User';
-    userEmail.value = LocalStorage.getEmail();
-    userAvatar.value = LocalStorage.getImage() ?? '';
+  Future<void> fetchUserProfile() async {
+    isLoading.value = true;
+    try {
+      final result = await ApiServices.get<UserModel>(
+        UserModel.fromJson,
+        AppEndpoint.profileGetURL,
+        showResult: true,
+      );
+      if (result != null) {
+        user.value = result;
+      }
+    } finally {
+      isLoading.value = false;
+    }
   }
-
-  void goToEditProfile() => Get.toNamed(Routes.updateProfile);
-  void goToSettings() => Get.toNamed(Routes.settings);
 
   Future<void> logout() async {
     await LocalStorage.signOut();

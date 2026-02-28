@@ -64,16 +64,15 @@ class _SplashMobileState extends State<_SplashMobile>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Logo placeholder — replace with your asset image
               Container(
-                width: 96,
-                height: 96,
+                width: AppSizes.logoSize,
+                height: AppSizes.logoSize,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.15),
+                      color: Colors.black.withValues(alpha: 0.15),
                       blurRadius: 20,
                       spreadRadius: 2,
                     ),
@@ -81,7 +80,7 @@ class _SplashMobileState extends State<_SplashMobile>
                 ),
                 child: const Icon(
                   Icons.bolt_rounded,
-                  size: 52,
+                  size: AppSizes.iconExtraLarge,
                   color: AppColors.primary,
                 ),
               ),
@@ -100,18 +99,16 @@ class _SplashMobileState extends State<_SplashMobile>
                 AppStrings.appTagline,
                 style: TextStyle(
                   fontSize: AppSizes.fontMedium,
-                  color: Colors.white.withOpacity(0.75),
+                  color: Colors.white.withValues(alpha: 0.75),
                 ),
               ),
-              const SizedBox(height: AppSizes.gapXXLarge * 2),
-              SizedBox(
-                width: 24,
-                height: 24,
+              const SizedBox(height: AppSizes.splashBottomGap),
+              const SizedBox(
+                width: AppSizes.progressIndicatorSize,
+                height: AppSizes.progressIndicatorSize,
                 child: CircularProgressIndicator(
-                  strokeWidth: 2.5,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    Colors.white.withOpacity(0.7),
-                  ),
+                  strokeWidth: AppSizes.indicatorStrokeWidth,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white70),
                 ),
               ),
             ],

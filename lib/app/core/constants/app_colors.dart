@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-/// A pro-level centralized color management for Flutter app.
-/// Use AppColors.primary, AppColors.background, etc., everywhere.
-
 class AppColors {
   // --------------------
-  // Brand / Primary Colors
+  // Brand / Daraz Colors
   // --------------------
-  static const Color primary = Color(0xFF4A90E2);        // Main brand color
-  static const Color primaryLight = Color(0xFF7AB4F5);   // Light variant
-  static const Color primaryDark = Color(0xFF0066B3);    // Dark variant
+  static const Color primary = Color(0xFFFF6000); // Daraz Orange
+  static const Color primaryDark = Color(0xFFE05200);
+  static const Color primaryLight = Color(0xFFFF8C00);
 
-  static const Color accent = Color(0xFFFFC107);         // Accent color
+  static const Color bg = Color(0xFFF5F5F5); // Daraz Background
+  static const Color yellow = Color(0xFFFFC200); // Daraz Yellow
+
+  static const Color accent = Color(0xFFFFC107);
   static const Color accentLight = Color(0xFFFFF350);
   static const Color accentDark = Color(0xFFC79100);
 
@@ -50,7 +50,7 @@ class AppColors {
   // Optional Semantic / Extra
   // --------------------
   static const Color divider = Color(0xFFE0E0E0);
-  static const Color shadow = Color(0x29000000); // 16% opacity black
+  static const Color shadow = Color(0x29000000);
   static const Color transparent = Colors.transparent;
 
   // --------------------

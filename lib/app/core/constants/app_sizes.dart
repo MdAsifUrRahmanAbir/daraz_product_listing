@@ -45,6 +45,7 @@ class AppSizes {
   static const double radiusMid = 16.0;
   static const double radiusSmall = 12.0;
   static const double radius = 8.0;
+  static const double radiusXSmall = 4.0;
 
   // --------------------
   // Gaps / Spacing between widgets
@@ -65,6 +66,15 @@ class AppSizes {
   static const double iconMid = 24.0;
   static const double iconSmall = 20.0;
   static const double iconXSmall = 16.0;
+
+  // --------------------
+  // Specific Component Sizes
+  // --------------------
+  static const double logoSize = 96.0;
+  static const double progressIndicatorSize = 24.0;
+  static const double indicatorStrokeWidth = 2.5;
+  static const double splashBottomGap = 64.0;
+  static const double iconExtraLarge = 52.0;
 
   // --------------------
   // Button / Input Sizes
