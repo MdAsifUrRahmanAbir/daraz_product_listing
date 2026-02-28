@@ -17,7 +17,7 @@ A high-performance Flutter application mimicking the **Daraz** e-commerce experi
 
 ### 📹 Screen Recording
 Experience the smooth transitions and loading effects in action:
-**[View Screen Recording](screen_video.webm)**
+**[View Screen Recording](screen_video.mp4)**
 
 ---
 
